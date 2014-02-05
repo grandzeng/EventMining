@@ -59,14 +59,16 @@ public abstract class AbstractExpectationmMaximization {
 		double oldLogLikelihood = logLikelihood;
 		double delta = 0.0;
 		initialization();
+		logInfo();
 		do {
 			expectation();
 			maximization();
 			evaluation();
 			delta = Math.abs(logLikelihood - oldLogLikelihood);
 			iteration++;
+			oldLogLikelihood = logLikelihood;
 			logInfo();
-		} while (delta <= threshold);
+		} while (delta > threshold);
 	}
 
 }
