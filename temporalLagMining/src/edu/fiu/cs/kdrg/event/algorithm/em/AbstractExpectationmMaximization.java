@@ -10,7 +10,7 @@ package edu.fiu.cs.kdrg.event.algorithm.em;
  * @date Feb. 5th, 2014
  */
 
-public abstract class ExpectationmMaximization {
+public abstract class AbstractExpectationmMaximization {
 
 	/**
 	 * The objective is to maximize the logLikelihood

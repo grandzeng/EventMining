@@ -14,7 +14,6 @@ class Simulator(object):
     Generate synthetic data
     '''
 
-
     def __init__(self):
         '''
         Constructor
