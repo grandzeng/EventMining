@@ -39,6 +39,6 @@ public class DensityEval {
 	}
 	
 	public static void main(String args[]){
-		System.out.println(normalDensity(1000,10,-0.71));
+		System.out.println(exponentialDistribution(2,0));
 	}
 }

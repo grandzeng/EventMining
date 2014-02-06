@@ -145,8 +145,8 @@ public class RevisedLagExponentialMixture extends
 				temp += (intermediate[i][j] * (consequents[i] - antecedents[j]));
 			}
 		}
-		temp = temp / consequents.length;
-		lambda = 1.0 / temp;
+		lambda = temp / consequents.length;
+
 	}
 
 	/*

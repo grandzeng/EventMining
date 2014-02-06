@@ -79,10 +79,10 @@ public class LagGaussianMixture extends AbstractExpectationmMaximization {
 		sb.append(sigmaSqrt);
 		sb.append(",logLikelihood=");
 		sb.append(logLikelihood);
-//		for (int i = 0; i < PIs.length; i++) {
-//			sb.append("\t");
-//			sb.append(PIs[i]);
-//		}
+		// for (int i = 0; i < PIs.length; i++) {
+		// sb.append("\t");
+		// sb.append(PIs[i]);
+		// }
 		System.out.println(sb.toString());
 	}
 
@@ -109,15 +109,19 @@ public class LagGaussianMixture extends AbstractExpectationmMaximization {
 			temp = 0.0;
 			for (int j = 0; j < antecedents.length; j++) {
 				intermediate[i][j] = PIs[j]
-						* DensityEval.normalDensity(miu,
-								Math.sqrt(sigmaSqrt), consequents[i] - antecedents[j]);
+						* DensityEval.normalDensity(miu, Math.sqrt(sigmaSqrt),
+								consequents[i] - antecedents[j]);
 				temp += intermediate[i][j];
 			}
-
-			for (int j = 0; j < antecedents.length; j++) {
-				intermediate[i][j] = intermediate[i][j] / temp;
-			}
-//			intermediate[i][antecedents.length] = 1.0;
+			if (temp != 0)
+				for (int j = 0; j < antecedents.length; j++) {
+					intermediate[i][j] = intermediate[i][j] / temp;
+				}
+			else
+				for (int j = 0; j < antecedents.length; j++) {
+					intermediate[i][j] = PIs[j];
+				}
+			// intermediate[i][antecedents.length] = 1.0;
 		}
 	}
 
@@ -167,9 +171,8 @@ public class LagGaussianMixture extends AbstractExpectationmMaximization {
 		for (int i = 0; i < consequents.length; i++) {
 			double sum = 0.0;
 			for (int j = 0; j < antecedents.length; j++) {
-				sum += (PIs[j] * DensityEval.normalDensity(
-						miu, Math.sqrt(sigmaSqrt),
-						consequents[i] - antecedents[j]));
+				sum += (PIs[j] * DensityEval.normalDensity(miu,
+						Math.sqrt(sigmaSqrt), consequents[i] - antecedents[j]));
 			}
 			newLogLikelihood += Math.log(sum);
 		}
