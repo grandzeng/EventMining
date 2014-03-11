@@ -94,8 +94,7 @@ public class LagGaussianMixture extends AbstractExpectationmMaximization {
 			PIs[i] = average;
 		}
 
-		// the last element of each row is the sum of all the elements of
-		// current row.
+		
 		intermediate = new double[consequents.length][antecedents.length];
 
 	}

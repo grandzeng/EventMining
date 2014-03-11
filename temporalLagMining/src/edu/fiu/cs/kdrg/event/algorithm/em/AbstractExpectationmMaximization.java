@@ -13,6 +13,11 @@ package edu.fiu.cs.kdrg.event.algorithm.em;
 public abstract class AbstractExpectationmMaximization {
 
 	/**
+	 * running time
+	 */
+	protected long milliseconds = 0l;
+
+	/**
 	 * The objective is to maximize the logLikelihood
 	 */
 	protected double logLikelihood = Double.NEGATIVE_INFINITY;
@@ -58,8 +63,9 @@ public abstract class AbstractExpectationmMaximization {
 	public void run() {
 		double oldLogLikelihood = logLikelihood;
 		double delta = 0.0;
+		this.milliseconds = System.currentTimeMillis();
 		initialization();
-		logInfo();
+		 logInfo();
 		do {
 			expectation();
 			maximization();
@@ -67,8 +73,24 @@ public abstract class AbstractExpectationmMaximization {
 			delta = Math.abs(logLikelihood - oldLogLikelihood);
 			iteration++;
 			oldLogLikelihood = logLikelihood;
-			logInfo();
+			 logInfo();
 		} while (delta > threshold);
+		this.milliseconds = System.currentTimeMillis() - this.milliseconds;
+	}
+
+	/**
+	 * @return the threshold
+	 */
+	public double getThreshold() {
+		return threshold;
+	}
+
+	/**
+	 * @param threshold
+	 *            the threshold to set
+	 */
+	public void setThreshold(double threshold) {
+		this.threshold = threshold;
 	}
 
 }

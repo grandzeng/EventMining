@@ -76,7 +76,9 @@ public class RevisedLagGMM extends AbstractExpectationmMaximization {
 	public void logInfo() {
 		// TODO Auto-generated method stub
 		StringBuffer sb = new StringBuffer();
-		sb.append("(#iteration=");
+		sb.append("[elapse=");
+		sb.append(this.milliseconds);
+		sb.append("](#iteration=");
 		sb.append(iteration);
 		sb.append("): miu=");
 		sb.append(miu);
@@ -146,6 +148,8 @@ public class RevisedLagGMM extends AbstractExpectationmMaximization {
 			}
 
 		}
+
+		// System.out.println("expectation @ iteration=" + iteration);
 	}
 
 	/*
@@ -179,6 +183,8 @@ public class RevisedLagGMM extends AbstractExpectationmMaximization {
 		}
 		newSigmaSqrt = 2 * newSigmaSqrt / consequents.length;
 		sigmaSqrt = newSigmaSqrt;
+
+		// System.out.println("maximization @ iteration=" + iteration);
 	}
 
 	/*
@@ -191,6 +197,7 @@ public class RevisedLagGMM extends AbstractExpectationmMaximization {
 	public void evaluation() {
 		// TODO Auto-generated method stub
 		double newLogLikelihood = 0.0;
+		double avg = 1.0 / consequents.length;
 
 		for (int i = 0; i < consequents.length; i++) {
 			double sum = 0.0;
@@ -198,9 +205,53 @@ public class RevisedLagGMM extends AbstractExpectationmMaximization {
 				sum += (intermediate[i][j] * DensityEval.normalDensity(miu,
 						Math.sqrt(sigmaSqrt), consequents[i] - antecedents[j]));
 			}
+			if (sum == 0.0) {
+				continue;
+			}
+
 			newLogLikelihood += Math.log(sum);
 		}
 		logLikelihood = newLogLikelihood;
+		// System.out.println("evaluation @ iteration=" + iteration);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.fiu.cs.kdrg.event.algorithm.em.AbstractExpectationmMaximization#run()
+	 */
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		double oldLogLikelihood = logLikelihood;
+		double oldMiu = miu;
+		double oldSigma = sigmaSqrt;
+		double delta = 0.0;
+		double miuDelta = 0.0;
+		double sigmaDelta = 0.0;
+		this.milliseconds = System.currentTimeMillis();
+		initialization();
+//		 logInfo();
+		do {
+			expectation();
+			maximization();
+			evaluation();
+			delta = Math.abs(logLikelihood - oldLogLikelihood);
+			miuDelta = Math.abs(miu - oldMiu);
+			sigmaDelta = Math.abs(sigmaSqrt - oldSigma);
+			iteration++;
+			oldLogLikelihood = logLikelihood;
+			oldMiu = miu;
+			oldSigma = sigmaSqrt;
+//			 logInfo();
+			if (logLikelihood == Double.NEGATIVE_INFINITY)
+				break;
+			if(iteration >1000)
+				break;
+		} while (delta > threshold || miuDelta > threshold
+				|| sigmaDelta > threshold );
+		milliseconds = System.currentTimeMillis() - milliseconds;
 	}
 
 }

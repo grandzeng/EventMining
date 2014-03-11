@@ -21,6 +21,8 @@ public class DEventLoader<T> {
 	 */
 	private long eventNumber = -1;
 
+	private int maxEventType = 0;
+
 	/**
 	 * a sequence of events
 	 */
@@ -59,6 +61,7 @@ public class DEventLoader<T> {
 	public List<DEvent<T>> load(BufferedReader reader) throws IOException {
 		String line = null;
 		String patterns[] = null;
+		int type = 0;
 
 		eventNumber = -1;
 		events = new ArrayList<DEvent<T>>();
@@ -80,6 +83,10 @@ public class DEventLoader<T> {
 			if (patterns.length != 2)
 				continue;
 			DEvent<T> event = new DEvent<T>();
+			type = Integer.parseInt(patterns[0]);
+			if (type > maxEventType)
+				maxEventType = type;
+			
 			event.setEventType(Integer.parseInt(patterns[0]));
 			event.setTimestamp(Double.parseDouble(patterns[1]));
 			events.add(event);
@@ -117,6 +124,10 @@ public class DEventLoader<T> {
 	 */
 	public List<DEvent<T>> getEvents() {
 		return events;
+	}
+	
+	public int getMaxEventType(){
+		return maxEventType;
 	}
 
 }
